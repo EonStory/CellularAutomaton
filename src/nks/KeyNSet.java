@@ -11,17 +11,17 @@ public class KeyNSet {
 	public KeyNSet(int cells, int colours, int[] ruleSet) {
 		this.cells = cells;
 		this.colours = colours;
-		this.numberOfKeys = (int) LongMath.power(colours, cells);
+		this.numberOfKeys = (int) Util.power(colours, cells);
 		//construct rule set
 		this.ruleSet = ruleSet;
 	}
 	
 	public int computeCell(int[] input) {
 		int num = 0;
-		//System.out.println("total keys " + (int) LongMath.power(colours, input.length));
+		//System.out.println("total keys " + (int) Util.power(colours, input.length));
 		for (int i = 0; i < input.length; i++) {
 			//System.out.println("input i is " + input[i]);
-			num += (int) LongMath.power(colours, input.length - i - 1) * input[i];
+			num += (int) Util.power(colours, input.length - i - 1) * input[i];
 			//System.out.println(num + " is num" );
 			//System.out.println("input.length - i - 1 is " + (input.length - i - 1));
 		}		

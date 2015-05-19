@@ -4,75 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Analysis {
 	
 	
-	public static void main(String[] args) throws FileNotFoundException {
-		//long[] cands = createCandidates2();
-		//boolean[] hasPairedgreens = new boolean[cands.length];
-		//int[][] repeat = new int[cands.length][2];
-		/*
-		int[] ba = {3, -4, 1, 2, -3};
-		int[] sta = numbersAsInput(ba);
-		Key3Set k = new Key3Set(3, 7609907732661l);
-		int[][] image = Reform.computeEntire(sta, k, 1000000);
-		System.out.println(firstReversibleRepeat(image));
-		System.out.println("other way " + firstReversibleRepeat(k, sta, 1000000000));
+	public static void main(String[] args) throws FileNotFoundException {				
 		
-		int[] ab = numbersAsInput(ba);
-		for (int i = 0; i < cands.length/50; i++) {
-			Key3Set r = new Key3Set(3, cands[i]);			
-			int[] bleh = firstRepeat(Reform.computeEntire(ab, r, 4000));
-			repeat[0][0] = bleh[0];
-			repeat[i][1] = bleh[1] - bleh[0];
-		}		
-		
-		for (int i = 0; i < repeat.length; i++) {
-			if (repeat[i][1] == -5) {
-				System.out.println("hey, rule " + cands[i] + " has a repeat length of " + repeat[i][1]);
-				System.out.println("wut");
-			}
-		}
-		
-		//for (int i = 0; i < ab.length; i++) {
-		//	System.out.print(ab[i] + " ");
-		//}
-		
-		//int[] start = Analysis.numbersAsInput(new int[] {29, -5, -17, -3, 7});
-		//Key3Set rule = new Key3Set(3, 7377827710293l);
-		//int[][] image = Reform.computeEntire(start, rule, 100);
-		//System.out.println("first repeat is ..... (drumroll please) ... " + firstRepeat(image)[0] + " and " +  firstRepeat(image)[1] );
-		
-		/*
-		int[] start = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1};
-		//
-	
-		int[][] baba =
-		
-		
-		for (long i = 0; i < 7625597484987l; i++) {
-			Key3Set k = new Key3Set(3, i);
-			if (isSymmetricalAboutGreen(k)) {
-				System.out.println(i);
-			}
-			if (i % 1000000 == 0) {
-				System.out.println("i is " + i);
-			}
-		}
-		*/
-		//start[5] = 1;
-		//Key3Set rule30 = new Key3Set(3, 3097483878567l);
-		//Key3Set rule30 = new Key3Set(3, 1123289366095l);
-		//Key3Set rule30 = new Key3Set(3, 277206003607l);
-		//Key3Set rule30 = new Key3Set(2, 30);
-		//Key3Set rule = new Key3Set(3, 15689752325l);
-		//System.out.println(iterationsUntilRepeat(start, rule));
-		
-		
-		ArrayList<Key3Set> keke = new ArrayList<Key3Set>();
+		//reversivles is the set of 3colour 3cell reversibles cellular automata		
+		ArrayList<KeyNSet> keke = new ArrayList<KeyNSet>();
 		Scanner input = new Scanner(new File("reversibles.txt"));
 		input.useDelimiter(", \\n|, ");
 		int q = 0;
@@ -85,30 +27,21 @@ public class Analysis {
 				String[] ans = bob.split(", ");
 				for (int i = 0; i < ans.length; i++) {
 					long fred = Long.parseLong(ans[i].trim());
-					keke.add(new Key3Set(3, fred));
+					keke.add(new KeyNSet(3, 3, Util.numberToRule(fred, 3, 3)));
 				}
 			}
-			//System.out.println(input.nextInt());
-			//if (count % 10 == 0) {
-			//	System.out.println("");
-			//}
 		}
 		System.out.println("Done, now for the rulese which are good: ");
-		for (Key3Set k: keke) {
+		for (KeyNSet k: keke) {
 			if (isSymmetricalAboutGreen(k)) {
-				System.out.println(k.ruleNumber);
+				System.out.println(Arrays.toString(k.ruleSet));
 			}
 		}
 		
 	}
+		
 	
-	/* returns true if when flipping the red to blue and blue to red bits in the top 3 parts, the bottom part is also flipped
-	 * 
-	 */
-	//0 = red, 1 = green, 2 = blue
-	
-	
-	public static boolean isSymmetricalAboutGreen(Key3Set key) {
+	public static boolean isSymmetricalAboutGreen(KeyNSet key) {
 		for (int i = 0; i < key.ruleSet.length / 2; i++) {
 			//System.out.println("key.ruleSet.length - i  is " + (key.ruleSet.length - i));
 			if (key.ruleSet[key.ruleSet.length - 1- i] != 2 - key.ruleSet[i]) {
@@ -168,32 +101,7 @@ public class Analysis {
 			}
 		}
 		return -1;
-	}
-	
-	//O(n)
-	public static long firstReversibleRepeat(Key3Set key, int[] initialRow, long limit) {
-		long iterations = 0;
-		int[] row = initialRow.clone();
-		
-		while (true) {
-			boolean repeat = false;
-			row = Reform.computeNextRow(row, key);
-			for (int i = 0; i < initialRow.length; i++) {
-				if (row[i] != initialRow[i]) {
-					repeat = true;
-					break;
-				}
-			}			
-			iterations++;
-			if (repeat == false) {
-				break;
-			}
-			if (iterations == limit) {
-				return -1;
-			}
-		}
-		return iterations;
-	}
+	}	
 	
 	//O(rows^2)	
 	public static int[] firstRepeat(int[][] image) {
@@ -259,10 +167,11 @@ public class Analysis {
 		return bob;
 	}
 	*/
+	
 	public static long ruleNumber(int colours, int[] rule) {
 		long ruleNumber = 0;
 		for (int i = 0; i < rule.length; i++) {
-			ruleNumber += LongMath.power(colours, i) * rule[rule.length - 1 - i];
+			ruleNumber += Util.power(colours, i) * rule[rule.length - 1 - i];
 		}
 		return ruleNumber;
 	}
